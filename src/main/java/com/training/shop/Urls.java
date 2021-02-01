@@ -4,13 +4,13 @@ public interface Urls {
 
     String ROOT = "";
 
-    interface ParcelInfo {
-        String PART = "info";
+    interface OrderInfo {
+        String PART = "order";
         String FULL = ROOT + "/" + PART;
 
         interface Id {
             String PART = "{id}";
-            String FULL = ParcelInfo.FULL + "/" + PART;
+            String FULL = OrderInfo.FULL + "/" + PART;
         }
     }
 }

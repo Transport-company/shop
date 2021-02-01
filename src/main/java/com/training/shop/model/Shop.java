@@ -12,13 +12,23 @@ import javax.persistence.*;
 @Table(name = "shop")
 @Data
 public class Shop {
+
+    /**
+     * Unique identifier
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Shop name
+     */
     @Column(name = "name")
     private String name;
 
+    /**
+     * Location of shop
+     */
     @Column(name = "city")
     private String city;
 }
