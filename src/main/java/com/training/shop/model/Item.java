@@ -5,17 +5,15 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Model for cargo
+ * Entity about item
  */
-
 @Entity
-@Table(name = "cargo")
+@Table(name = "item")
 @Data
-public class Cargo {
+public class Item {
 
     /**
      * Unique identifier
@@ -25,54 +23,40 @@ public class Cargo {
     private Long id;
 
     /**
-     * Cargo code for inside use
+     * Item name
      */
-    @Column(name = "number")
-    private BigDecimal number;
+    @Column(name = "name")
+    private String name;
 
     /**
-     * Weight of the cargo
+     * Price of a one item
+     */
+    @Column(name = "price")
+    private Float price;
+
+    /**
+     * Weight of one item
      */
     @Column(name = "weight")
     private Float weight;
 
     /**
-     * Price of the cargo
-     */
-    @Column(name = "declared_value")
-    private BigDecimal declaredValue;
-
-    /**
-     * Cargo packing length
+     * Length of one item
      */
     @Column(name = "length")
     private Float length;
 
     /**
-     * Cargo packing width
+     * Width of one item
      */
     @Column(name = "width")
     private Float width;
 
     /**
-     * Cargo packing height
+     * Height of one item
      */
     @Column(name = "height")
     private Float height;
-
-    /**
-     * Information about shop-seller
-     */
-    @OneToOne(cascade = CascadeType.ALL,  fetch = FetchType.EAGER)
-    @JoinColumn(name = "shop_id", referencedColumnName = "id")
-    private Shop shop;
-
-    /**
-     * Sender shop info
-     */
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "order_id", referencedColumnName = "id")
-    private Order order;
 
     /**
      * Time of object creation
