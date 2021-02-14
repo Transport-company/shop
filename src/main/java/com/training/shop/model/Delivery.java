@@ -36,13 +36,6 @@ public class Delivery {
     private String trackingNumber;
 
     /**
-     * Cargo information
-     */
-    @OneToOne(cascade = CascadeType.ALL,  fetch = FetchType.EAGER)
-    @JoinColumn(name = "cargo_id", referencedColumnName = "id")
-    private Cargo cargo;
-
-    /**
      * Sending address
      */
     @ManyToOne(fetch = FetchType.EAGER, optional = false, targetEntity = Address.class)

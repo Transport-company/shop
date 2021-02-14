@@ -43,49 +43,6 @@ CREATE TABLE IF NOT EXISTS customer
     updated      timestamp          NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS orders
-(
-    id           bigserial          PRIMARY KEY,
-    order_number decimal            NOT NULL,
-    customer_id  int8               NOT NULL,
-    created      timestamp          NOT NULL,
-    updated      timestamp          NOT NULL,
-    FOREIGN KEY (customer_id) REFERENCES customer(id)
-);
-
-CREATE TABLE IF NOT EXISTS order_details
-(
-    id           bigserial          PRIMARY KEY,
-    order_id     int8               NOT NULL,
-    item_id      int8               NOT NULL,
-    price        float              NOT NULL,
-    amount       decimal            NOT NULL,
-    quantity     decimal            NOT NULL,
-    customer_id  int8               NOT NULL,
-    created      timestamp          NOT NULL,
-    updated      timestamp          NOT NULL,
-    FOREIGN KEY (order_id) REFERENCES orders(id),
-    FOREIGN KEY (item_id) REFERENCES item(id),
-    FOREIGN KEY (customer_id) REFERENCES customer(id)
-);
-
-CREATE TABLE IF NOT EXISTS cargo
-(
-    id               bigserial          PRIMARY KEY,
-    number           decimal            NOT NULL,
-    weight           float              NOT NULL,
-    declared_value   decimal            NOT NULL,
-    length           float              NOT NULL,
-    width            float              NOT NULL,
-    height           float              NOT NULL,
-    shop_id          int8               NOT NULL,
-    order_id         int8               NOT NULL,
-    created          timestamp          NOT NULL,
-    updated          timestamp          NOT NULL,
-    FOREIGN KEY (shop_id) REFERENCES shop(id),
-    FOREIGN KEY (order_id) REFERENCES orders(id)
-);
-
 CREATE TABLE IF NOT EXISTS delivery
 (
     id                   bigserial      PRIMARY KEY,
@@ -94,12 +51,27 @@ CREATE TABLE IF NOT EXISTS delivery
     shipping_address_id  int8           NOT NULL,
     sending_address_id   int8           NOT NULL,
     customer_id          int8           NOT NULL,
-    cargo_id             int8           NOT NULL,
     status               varchar(10)    NOT NULL,
     created              timestamp      NOT NULL,
     updated              timestamp      NOT NULL,
-    FOREIGN KEY (cargo_id) REFERENCES cargo(id),
     FOREIGN KEY (shipping_address_id) REFERENCES address(id),
     FOREIGN KEY (sending_address_id) REFERENCES address(id),
     FOREIGN KEY (customer_id) REFERENCES customer(id)
 );
+
+CREATE TABLE IF NOT EXISTS cart_line
+(
+    id          bigserial PRIMARY KEY,
+    item_id     int8      NOT NULL,
+    amount      int8     NOT NULL,
+    FOREIGN KEY (item_id) REFERENCES item(id)
+);
+
+CREATE TABLE IF NOT EXISTS cart
+(
+    id          bigserial PRIMARY KEY,
+    cart_lines  int8      NOT NULL,
+    total_price decimal   NOT NULL,
+    FOREIGN KEY (cart_lines) REFERENCES cart_line(id)
+)
+

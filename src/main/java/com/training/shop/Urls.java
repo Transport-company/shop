@@ -13,4 +13,44 @@ public interface Urls {
             String FULL = OrderInfo.FULL + "/" + PART;
         }
     }
+
+    interface Cart {
+        String PART = "cart";
+        String FULL = ROOT + "/" + PART;
+
+        interface Create {
+            String PART = "add";
+            String FULL = ROOT + "/" + PART;
+
+            interface Id {
+                String PART = "{id}";
+                String FULL = Cart.FULL + "/" + PART;
+            }
+        }
+
+        interface Delete {
+            String PART = "remove";
+            String FULL = ROOT + "/" + PART;
+
+            interface Id {
+                String PART = "{id}";
+                String FULL = Cart.FULL + "/" + PART;
+            }
+        }
+
+        interface GetList {
+            String PART = "getCArt";
+            String FULL = ROOT + "/" + PART;
+
+            interface Id {
+                String PART = "{id}";
+                String FULL = Cart.FULL + "/" + PART;
+            }
+        }
+
+        interface Id {
+            String PART = "{id}";
+            String FULL = Cart.FULL + "/" + PART;
+        }
+    }
 }

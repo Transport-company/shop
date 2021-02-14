@@ -7,7 +7,6 @@ import javax.persistence.*;
 /**
  * Model for shop
  */
-
 @Entity
 @Table(name = "shop")
 @Data
