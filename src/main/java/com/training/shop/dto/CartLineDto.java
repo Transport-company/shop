@@ -3,7 +3,6 @@ package com.training.shop.dto;
 import com.training.shop.model.Item;
 import lombok.Data;
 
-import java.math.BigDecimal;
 
 @Data
 public class CartLineDto {
@@ -16,5 +15,5 @@ public class CartLineDto {
     /**
      * Amount of items
      */
-    private BigDecimal amount;
+    private Integer amount;
 }

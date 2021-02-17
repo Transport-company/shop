@@ -2,9 +2,11 @@ package com.training.shop.controller;
 
 import com.training.shop.Urls;
 import com.training.shop.dto.CartLineDto;
+import com.training.shop.dto.DeliveryDto;
 import com.training.shop.dto.request.DeliveryRequest;
 import com.training.shop.dto.response.DeliveryResponse;
 import com.training.shop.model.Cart;
+import com.training.shop.model.Delivery;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -72,12 +74,12 @@ public interface CartController {
             @ApiResponse(responseCode = "404", description = "Order not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @PostMapping(Urls.Cart.Id.FULL)
-    ResponseEntity<DeliveryResponse> formDelivery(@Parameter(
+    @PostMapping(Urls.Delivery.FULL)
+    ResponseEntity<Delivery> formDelivery(@Parameter(
             description = "The delivery to add. Cannot be null.",
             required = true,
             schema = @Schema(implementation = DeliveryRequest.class))
-                                                  @RequestParam Long id, @RequestBody DeliveryRequest deliveryRequest);
+                                                  @RequestParam Long id, @RequestBody DeliveryDto deliveryDto);
 
 
 }

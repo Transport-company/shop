@@ -1,6 +1,9 @@
 package com.training.shop.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -9,12 +12,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * Entity for customer
+ * Entity for the client
  */
 @Entity
-@Table(name = "customer")
+@Table(name = "client")
 @Data
-public class Customer {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Client {
 
     /**
      * Unique identifier of client
@@ -24,22 +30,22 @@ public class Customer {
     private Long id;
 
     /**
-     * The first name of the client
+     * The last name of the client
      */
-    @Column(name = "name")
-    private String name;
+    @Column(name = "last_name")
+    private String lastName;
 
     /**
-     * The second name of the client
+     * The first name of the client
      */
-    @Column(name = "surname")
-    private String surname;
+    @Column(name = "first_name")
+    private String firstName;
 
     /**
      * The patronymic of the client
      */
-    @Column(name = "patronymic")
-    private String patronymic;
+    @Column(name = "middle_name")
+    private String middleName;
 
     /**
      * Date of birth
@@ -50,8 +56,8 @@ public class Customer {
     /**
      * The phone number of the client
      */
-    @Column(name = "phone")
-    private String phone;
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
     /**
      * The email of the client
@@ -72,5 +78,4 @@ public class Customer {
     @UpdateTimestamp
     @Column(name = "updated")
     private LocalDateTime updated;
-
 }

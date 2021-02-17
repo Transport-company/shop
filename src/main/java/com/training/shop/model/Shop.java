@@ -30,4 +30,11 @@ public class Shop {
      */
     @Column(name = "city")
     private String city;
+
+    /**
+     * Shop address
+     */
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, targetEntity = Address.class)
+    @JoinColumn(name = "sending_address_id")
+    private Address sendingAddress;
 }

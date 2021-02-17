@@ -1,6 +1,9 @@
 package com.training.shop.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -9,52 +12,49 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Entity about item
+ * Entity for cargo
  */
 @Entity
-@Table(name = "item")
+@Table(name = "cargo")
 @Data
-public class Item {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Cargo {
 
     /**
-     * Unique identifier
+     * Unique identifier of the cargo
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
-     * Item name
-     */
-    @Column(name = "name")
-    private String name;
-
-    /**
-     * Price of a one item
-     */
-    @Column(name = "price")
-    private BigDecimal price;
-
-    /**
-     * Weight of one item
+     * Weight of the cargo
      */
     @Column(name = "weight")
     private Float weight;
 
     /**
-     * Length of one item
+     * Price of the cargo
+     */
+    @Column(name = "declared_value")
+    private BigDecimal declaredValue;
+
+    /**
+     * Cargo packing length
      */
     @Column(name = "length")
     private Float length;
 
     /**
-     * Width of one item
+     * Cargo packing width
      */
     @Column(name = "width")
     private Float width;
 
     /**
-     * Height of one item
+     * Cargo packing height
      */
     @Column(name = "height")
     private Float height;

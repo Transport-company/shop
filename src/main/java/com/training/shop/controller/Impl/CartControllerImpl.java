@@ -2,9 +2,11 @@ package com.training.shop.controller.Impl;
 
 import com.training.shop.controller.CartController;
 import com.training.shop.dto.CartLineDto;
+import com.training.shop.dto.DeliveryDto;
 import com.training.shop.dto.request.DeliveryRequest;
 import com.training.shop.dto.response.DeliveryResponse;
 import com.training.shop.model.Cart;
+import com.training.shop.model.Delivery;
 import com.training.shop.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,7 +37,8 @@ public class CartControllerImpl implements CartController {
     }
 
     @Override
-    public ResponseEntity<DeliveryResponse> formDelivery(Long id, DeliveryRequest deliveryRequest) {
-        return null;
+    public ResponseEntity<Delivery> formDelivery(Long id, DeliveryDto deliveryDto) {
+        cartService.formDelivery(id, deliveryDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

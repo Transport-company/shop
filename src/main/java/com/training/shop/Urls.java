@@ -39,7 +39,7 @@ public interface Urls {
         }
 
         interface GetList {
-            String PART = "getCArt";
+            String PART = "getCart";
             String FULL = ROOT + "/" + PART;
 
             interface Id {
@@ -52,5 +52,10 @@ public interface Urls {
             String PART = "{id}";
             String FULL = Cart.FULL + "/" + PART;
         }
+    }
+
+    interface Delivery{
+        String PART = "delivery";
+        String FULL = ROOT + "/" + PART;
     }
 }
