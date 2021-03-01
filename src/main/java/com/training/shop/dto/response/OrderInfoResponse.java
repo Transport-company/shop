@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @Schema(description = "Response for order info request")
 public class OrderInfoResponse {
 
-
     /**
      * Information about the client's desire to receive notifications
      */
@@ -25,7 +24,7 @@ public class OrderInfoResponse {
     /**
      * Information about payment for cargo transit
      */
-    private Boolean isPaid;
+    private Boolean paid;
 
     /**
      * Information about the delivery stage (cargo status)
