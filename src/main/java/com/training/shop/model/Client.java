@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -37,19 +36,19 @@ public class Client {
     /**
      * The last name of the client
      */
-    @Column(name = "last_name")
+    @Column(name = "surname", nullable = false)
     private String lastName;
 
     /**
      * The first name of the client
      */
-    @Column(name = "first_name")
+    @Column(name = "name")
     private String firstName;
 
     /**
      * The patronymic of the client
      */
-    @Column(name = "middle_name")
+    @Column(name = "patronymic", nullable = false)
     private String middleName;
 
     /**
@@ -61,7 +60,7 @@ public class Client {
     /**
      * The phone number of the client
      */
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", unique = true)
     private String phoneNumber;
 
     /**

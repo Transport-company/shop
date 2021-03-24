@@ -5,6 +5,7 @@ import com.training.shop.model.Cargo;
 import com.training.shop.model.Client;
 import com.training.shop.model.DeliveryStatus;
 import com.training.shop.model.Shop;
+import lombok.Builder;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -16,67 +17,68 @@ import java.time.LocalDateTime;
  * An object for transferring data from a controller to a response about delivery.
  */
 @Data
+@Builder
 public class DeliveryResponse {
 
     /**
      * Information about the client's desire to receive notifications
      */
-    private Boolean enabledNotifications;
+    private final Boolean enabledNotifications;
 
     /**
      * Cost of delivery
      */
-    private BigDecimal sum;
+    private final BigDecimal sum;
 
     /**
      * Unique delivery number
      */
-    private String trackingNumber;
+    private final String trackingNumber;
 
     /**
      * Information about payment for cargo transit
      */
-    private Boolean isPaid;
+    private final Boolean paid;
 
     /**
      * Information about the delivery stage (cargo status)
      */
-    private DeliveryStatus status;
+    private final DeliveryStatus status;
 
     /**
      * Cargo information
      */
-    private Cargo cargo;
+    private final Cargo cargo;
 
     /**
      * Information about the sender
      */
-    private Shop shop;
+    private final Shop shop;
 
     /**
      * Information about the recipient
      */
-    private Client client;
+    private final Client client;
 
     /**
      * Sending address
      */
-    private Address sendingAddress;
+    private final Address sendingAddress;
 
     /**
      * Shipping address
      */
-    private Address shippingAddress;
+    private final Address shippingAddress;
 
     /**
      * Time of object creation
      */
     @CreationTimestamp
-    private LocalDateTime created;
+    private final LocalDateTime created;
 
     /**
      * Update time
      */
     @UpdateTimestamp
-    private LocalDateTime updated;
+    private final LocalDateTime updated;
 }

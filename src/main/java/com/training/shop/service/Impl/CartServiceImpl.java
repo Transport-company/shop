@@ -3,20 +3,21 @@ package com.training.shop.service.Impl;
 import com.training.shop.dto.reqest.CartLineRequest;
 import com.training.shop.dto.reqest.DeliveryRequest;
 import com.training.shop.dto.response.DeliveryResponse;
+import com.training.shop.mapper.DeliveryMapper;
 import com.training.shop.model.Cargo;
 import com.training.shop.model.Cart;
 import com.training.shop.model.CartLine;
 import com.training.shop.repository.CargoRepository;
 import com.training.shop.repository.CartRepository;
 import com.training.shop.repository.DeliveryRepository;
+import com.training.shop.repository.ProductRepository;
 import com.training.shop.service.CartService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +26,8 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepository;
     private final CargoRepository cargoRepository;
     private final DeliveryRepository deliveryRepository;
+    private final DeliveryMapper deliveryMapper;
+    private final ProductRepository productRepository;
 
     @Override
     public Cart getById(Long id) {
@@ -32,25 +35,55 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void addToCart(Long id, CartLineRequest cartLineRequest) {
+    public void startShopping(CartLineRequest cartLineRequest) {
+        Cart cart = new Cart();
+        CartLine cartLine = new CartLine();
+        cartLine.setProduct(productRepository.getOne(cartLineRequest.getProductId()));
+        cartLine.setAmount(cartLineRequest.getAmount());
+        Set<CartLine> cartLines = new HashSet<>();
+        cart.setTotalWeight(productRepository.getOne(cartLineRequest.getProductId()).getWeight()
+                * cartLineRequest.getAmount());
+        cart.setTotalHeight(productRepository.getOne(cartLineRequest.getProductId()).getHeight()
+                * cartLineRequest.getAmount());
+        cart.setTotalLength(productRepository.getOne(cartLineRequest.getProductId()).getLength()
+                * cartLineRequest.getAmount());
+        cart.setTotalWidth(productRepository.getOne(cartLineRequest.getProductId()).getWidth()
+                * cartLineRequest.getAmount());
+        cart.setTotalPrice(productRepository.getOne(cartLineRequest.getProductId()).getPrice().multiply(BigDecimal
+                .valueOf(cartLineRequest.getAmount())));
+        cartLines.add(cartLine);
+        cart.setCartLine(cartLines);
+        cartRepository.save(cart);
+    }
 
+    @Override
+    public void addToCart(Long id, CartLineRequest cartLineRequest) {
         Cart cart = cartRepository.getOne(id);
         CartLine cartLine = new CartLine();
-        List<CartLine> cartLineList = new ArrayList<>();
-        cartLine.setId(cartLineRequest.getProduct().getId());
+        cartLine.setProduct(productRepository.getOne(cartLineRequest.getProductId()));
         cartLine.setAmount(cartLineRequest.getAmount());
-        cartLineList.add(cartLine);
-        cart.setCartLineList(cartLineList);
+        Set<CartLine> cartLines = cart.getCartLine();
+        cartLines.add(cartLine);
+        cart.setCartLine(cartLines);
+        cart.setTotalWeight(cart.getTotalWeight() + productRepository.getOne(cartLineRequest.getProductId())
+                .getWeight() * cartLineRequest.getAmount());
+        cart.setTotalHeight(cart.getTotalHeight() + productRepository.getOne(cartLineRequest.getProductId())
+                .getHeight() * cartLineRequest.getAmount());
+        cart.setTotalLength(cart.getTotalLength() + productRepository.getOne(cartLineRequest.getProductId())
+                .getLength() * cartLineRequest.getAmount());
+        cart.setTotalWidth(cart.getTotalWidth() + productRepository.getOne(cartLineRequest.getProductId())
+                .getWidth() * cartLineRequest.getAmount());
+        cart.setTotalPrice(productRepository.getOne(cartLineRequest.getProductId()).getPrice()
+                .multiply(BigDecimal.valueOf(cartLineRequest.getAmount())).add(cart.getTotalPrice()));
         cartRepository.save(cart);
     }
 
     @Override
     public void delete(Long id, Long itemId) {
-
         Cart cart = cartRepository.getOne(id);
-        List<CartLine> cartLineList = cart.getCartLineList();
-        for (CartLine cartLine : cartLineList){
-            if(cartLine.getProduct().getId().equals(itemId)){
+        Set<CartLine> cartLines = cart.getCartLine();
+        for (CartLine cartLine : cartLines) {
+            if (cartLine.getProduct().getId().equals(itemId)) {
                 cartLine.setProduct(null);
                 cartLine.setAmount(null);
                 cartLine.setId(null);
@@ -61,71 +94,58 @@ public class CartServiceImpl implements CartService {
     @Override
     public BigDecimal getTotalPrice(Long id) {
         Cart cart = cartRepository.getOne(id);
-        BigDecimal totalPrice = BigDecimal.ZERO;
-        List<CartLine> cartLineList = cart.getCartLineList();
-
-        for (CartLine cartLine : cartLineList){
-            BigDecimal price = cartLine.getProduct().getPrice().multiply(BigDecimal.valueOf(cartLine.getAmount()));
-            totalPrice = totalPrice.add(price);
-        }
-
-        return totalPrice;
+        Set<CartLine> cartLines = cart.getCartLine();
+        return cartLines.stream().map(cartLine -> cartLine.getProduct().getPrice()
+                .multiply(BigDecimal.valueOf(cartLine.getAmount())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     @Override
     public Float getTotalWeight(Long id) {
         Cart cart = cartRepository.getOne(id);
-        List<CartLine> cartLineList = cart.getCartLineList();
-        float totalWeight = 0;
-        for (CartLine cartLine : cartLineList){
-            totalWeight = totalWeight + cartLine.getProduct().getWeight() * cartLine.getAmount();
-        }
-        return totalWeight;
+        Set<CartLine> cartLines = cart.getCartLine();
+        return cartLines.stream().map(cartLine -> cartLine.getProduct().getWeight() * cartLine.getAmount()
+                .floatValue())
+                .reduce(1.0f, Float::sum);
     }
 
     @Override
     public Float getTotalLength(Long id) {
         Cart cart = cartRepository.getOne(id);
-        List<CartLine> cartLineList = cart.getCartLineList();
-        float totalLength = 0;
-        for (CartLine cartLine : cartLineList){
-            totalLength = totalLength + cartLine.getProduct().getLength() * cartLine.getAmount();
-        }
-        return totalLength;
+        Set<CartLine> cartLines = cart.getCartLine();
+        return cartLines.stream().map(cartLine -> cartLine.getProduct().getLength() * cartLine.getAmount()
+                .floatValue())
+                .reduce(1.0f, Float::sum);
     }
 
     @Override
     public Float getTotalWidth(Long id) {
         Cart cart = cartRepository.getOne(id);
-        List<CartLine> cartLineList = cart.getCartLineList();
-        float totalWidth = 0;
-        for (CartLine cartLine : cartLineList){
-            totalWidth = totalWidth + cartLine.getProduct().getWidth() * cartLine.getAmount();
-        }
-        return totalWidth;
+        Set<CartLine> cartLines = cart.getCartLine();
+        return cartLines.stream().map(cartLine -> cartLine.getProduct().getWeight() * cartLine.getAmount()
+                .floatValue())
+                .reduce(1.0f, Float::sum);
     }
 
     @Override
     public Float getTotalHeight(Long id) {
         Cart cart = cartRepository.getOne(id);
-        List<CartLine> cartLineList = cart.getCartLineList();
-        float totalHeight = 0;
-        for (CartLine cartLine : cartLineList){
-            totalHeight = totalHeight + cartLine.getProduct().getHeight() * cartLine.getAmount();
-        }
-        return totalHeight;
+        Set<CartLine> cartLines = cart.getCartLine();
+        return cartLines.stream().map(cartLine -> cartLine.getProduct().getHeight() * cartLine.getAmount()
+                .floatValue())
+                .reduce(1.0f, Float::sum);
     }
 
     @Override
     public Cargo formCargo(Long id) {
-        Cargo cargo = new Cargo();
-        cargo.setWeight(getTotalWeight(id));
-        cargo.setLength(getTotalLength(id));
-        cargo.setWidth(getTotalWidth(id));
-        cargo.setHeight(getTotalHeight(id));
-        cargo.setCreated(LocalDateTime.now());
-        cargo.setUpdated(LocalDateTime.now());
-        return cargo;
+        return Cargo.builder()
+                .weight(getTotalWeight(id))
+                .length(getTotalLength(id))
+                .width(getTotalWidth(id))
+                .height(getTotalHeight(id))
+                .created(LocalDateTime.now())
+                .updated(LocalDateTime.now())
+                .build();
     }
 
     @Override
@@ -135,19 +155,19 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public DeliveryResponse formDelivery(Long id, DeliveryRequest deliveryRequest) {
-        DeliveryResponse delivery = new DeliveryResponse();
-        delivery.setEnabledNotifications(deliveryRequest.getEnabledNotifications());
-        delivery.setShippingAddress(deliveryRequest.getShippingAddress());
-        delivery.setSendingAddress(deliveryRequest.getShop().getSendingAddress());
-        delivery.setCargo(formCargo(id));
-        delivery.setSum(getTotalPrice(id));
-        delivery.setClient(deliveryRequest.getClient());
-        delivery.setIsPaid(deliveryRequest.getIsPaid());
-        delivery.setStatus(deliveryRequest.getStatus());
-        delivery.setCreated(LocalDateTime.now());
-        delivery.setUpdated(LocalDateTime.now());
-        deliveryRepository.save(delivery);
+        DeliveryResponse delivery = DeliveryResponse.builder()
+                .enabledNotifications(deliveryRequest.getEnabledNotifications())
+                .paid(deliveryRequest.getPaid())
+                .sendingAddress(deliveryRequest.getShop().getSendingAddress())
+                .shippingAddress(deliveryRequest.getShippingAddress())
+                .client(deliveryRequest.getClient())
+                .cargo(formCargo(id))
+                .sum(getTotalPrice(id))
+                .status(deliveryRequest.getStatus())
+                .created(LocalDateTime.now())
+                .updated(LocalDateTime.now())
+                .build();
+        deliveryRepository.save(deliveryMapper.toDeliveryResponse(delivery));
         return delivery;
     }
-
 }

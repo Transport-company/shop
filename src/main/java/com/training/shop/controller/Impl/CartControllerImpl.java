@@ -18,13 +18,19 @@ public class CartControllerImpl implements CartController {
     private final CartService cartService;
 
     @Override
-    public ResponseEntity<Cart> getById(Long id) {
-        return ResponseEntity.ok(cartService.getById(id));
+    public ResponseEntity<Cart> getById(Long cartId) {
+        return ResponseEntity.ok(cartService.getById(cartId));
     }
 
     @Override
-    public ResponseEntity<Cart> addInCart(Long id, CartLineRequest cartLineRequest) {
-        cartService.addToCart(id, cartLineRequest);
+    public ResponseEntity<Cart> startShopping(CartLineRequest cartLineRequest) {
+        cartService.startShopping(cartLineRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @Override
+    public ResponseEntity<Cart> addInCart(Long cartId, CartLineRequest cartLineRequest) {
+        cartService.addToCart(cartId, cartLineRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
@@ -35,8 +41,8 @@ public class CartControllerImpl implements CartController {
     }
 
     @Override
-    public ResponseEntity<DeliveryResponse> formDelivery(Long id, DeliveryRequest deliveryRequest) {
-        cartService.formDelivery(id, deliveryRequest);
+    public ResponseEntity<DeliveryResponse> formDelivery(Long cartId, DeliveryRequest deliveryRequest) {
+        cartService.formDelivery(cartId, deliveryRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

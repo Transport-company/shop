@@ -9,7 +9,7 @@ public interface Urls {
         String FULL = ROOT + "/" + PART;
 
         interface Create {
-            String PART = "add";
+            String PART = "plus-position";
             String FULL = ROOT + "/" + PART;
 
             interface Id {
@@ -19,7 +19,7 @@ public interface Urls {
         }
 
         interface Delete {
-            String PART = "remove";
+            String PART = "minus-position";
             String FULL = ROOT + "/" + PART;
 
             interface Id {
@@ -29,7 +29,7 @@ public interface Urls {
         }
 
         interface GetList {
-            String PART = "getCart";
+            String PART = "cart-info";
             String FULL = ROOT + "/" + PART;
 
             interface Id {
@@ -45,7 +45,7 @@ public interface Urls {
     }
 
     interface Delivery{
-        String PART = "delivery";
+        String PART = "formed-delivery";
         String FULL = ROOT + "/" + PART;
     }
 }

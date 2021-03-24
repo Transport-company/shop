@@ -1,15 +1,18 @@
 package com.training.shop.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -19,6 +22,9 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "product")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Product {
 
     /**
@@ -32,6 +38,7 @@ public class Product {
      * Item name
      */
     @Column(name = "name")
+    @Size(max = 255)
     private String name;
 
     /**

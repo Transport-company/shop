@@ -50,6 +50,8 @@ CREATE TABLE IF NOT EXISTS client
     surname      varchar(50)        ,
     name         varchar(50)        NOT NULL,
     patronymic   varchar(50)        ,
+    phone_number varchar(11)        NOT NULL   UNIQUE,
+    birthday     date               NOT NULL,
     email        varchar(62)        NOT NULL,
     created      timestamp          NOT NULL,
     updated      timestamp          NOT NULL
@@ -61,7 +63,7 @@ CREATE TABLE IF NOT EXISTS delivery
     enabled_notifications boolean            NOT NULL,
     sum                   numeric(19,2)      NOT NULL,
     tracking_number       varchar(30)        NOT NULL,
-    is_paid               boolean            NOT NULL,
+    paid                  boolean            NOT NULL,
     status                varchar(10)        NOT NULL,
     cargo_id              int8               NOT NULL,
     shop_id               int8               NOT NULL,
@@ -77,22 +79,23 @@ CREATE TABLE IF NOT EXISTS delivery
     FOREIGN KEY (shipping_address_id) REFERENCES address (id)
 );
 
-CREATE TABLE IF NOT EXISTS cart_line
-(
-    id          bigserial PRIMARY KEY,
-    product_id     int8      NOT NULL,
-    amount      int8     NOT NULL,
-    FOREIGN KEY (product_id) REFERENCES product(id)
-);
-
 CREATE TABLE IF NOT EXISTS cart
 (
     id           bigserial PRIMARY KEY,
-    cart_lines   int8      NOT NULL,
-    total_price  decimal   NOT NULL,
-    total_weight float     NOT NULL,
-    total_length float     NOT NULL,
-    total_width  float     NOT NULL,
-    total_height float     NOT NULL,
-    FOREIGN KEY (cart_lines) REFERENCES cart_line(id)
-)
+    total_price  decimal   ,
+    total_weight float     ,
+    total_length float     ,
+    total_width  float     ,
+    total_height float
+);
+
+CREATE TABLE IF NOT EXISTS cart_line
+(
+    id          bigserial PRIMARY KEY,
+    cart_id        int8    ,
+    product_id     int8    NOT NULL,
+    amount         int8    NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES product(id),
+    FOREIGN KEY (cart_id) REFERENCES cart(id)
+);
+

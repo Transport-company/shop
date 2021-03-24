@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Shopping cart")
 @RequestMapping(Urls.Cart.FULL)
 public interface CartController {
+    String ID_PATH_VARIABLE = "/{id}";
+    String ID_PATH_VARIABLE_CREATE = Urls.Cart.Create.PART + "/" + ID_PATH_VARIABLE;
+    String ID_PATH_VARIABLE_DELETE = Urls.Cart.Delete.PART + "/" + ID_PATH_VARIABLE;
 
     @Operation(summary = "Get cart content", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(
@@ -25,12 +28,26 @@ public interface CartController {
             @ApiResponse(responseCode = "404", description = "Order not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @GetMapping(Urls.Cart.GetList.Id.FULL)
+    @GetMapping(ID_PATH_VARIABLE)
     ResponseEntity<Cart> getById(@Parameter(
             name = "id",
             description = "id  of the cart to be obtained. Cannot be null",
             required = true)
                                  @PathVariable("id") Long id);
+
+    @Operation(summary = "Start work with shopping cart", responses = {
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(
+                    mediaType = "application/json")),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Order not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
+    @PostMapping(Urls.Cart.Create.PART)
+    ResponseEntity<Cart> startShopping(@Parameter(
+            description = "the item to add. Cannot be null.",
+            required = true,
+            schema = @Schema(implementation = DeliveryRequest.class))
+                                       @RequestBody CartLineRequest cartLineRequest);
 
     @Operation(summary = "Add item in cart", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(
@@ -39,13 +56,13 @@ public interface CartController {
             @ApiResponse(responseCode = "404", description = "Order not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @PostMapping(Urls.Cart.Create.FULL)
+    @PutMapping(ID_PATH_VARIABLE_CREATE)
     ResponseEntity<Cart> addInCart(
             @Parameter(
                     description = "the item to add. Cannot be null.",
                     required = true,
                     schema = @Schema(implementation = DeliveryRequest.class))
-            @RequestParam("cartId") Long cartId, @RequestBody CartLineRequest cartLineRequest);
+            @PathVariable("id") Long id, @RequestBody CartLineRequest cartLineRequest);
 
     @Operation(summary = "Delete item form cart", responses = {
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(
@@ -54,7 +71,7 @@ public interface CartController {
             @ApiResponse(responseCode = "404", description = "Order not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
-    @DeleteMapping(Urls.Cart.Delete.Id.FULL)
+    @DeleteMapping(ID_PATH_VARIABLE_DELETE)
     ResponseEntity<String> deleteFromCart(@Parameter(
             name = "id",
             description = "id  of the item in cart to be deleted. Cannot be null",

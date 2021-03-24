@@ -15,7 +15,12 @@ public interface CartService {
     Cart getById(Long id);
 
     /**
-     * Method used to add product to cart. Require items id and amount
+     * Method used to add first product to cart. Require items id and amount
+     */
+    void startShopping(CartLineRequest cartLineRequest);
+
+    /**
+     * Method used to add product to cart. Require cart id, items id and amount
      */
     void addToCart(Long id, CartLineRequest cartLineRequest);
 

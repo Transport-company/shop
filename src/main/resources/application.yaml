@@ -6,11 +6,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/shop
     username: postgres
     password: postgres
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
 
-core:
-  trackingAPI:
-    url: some_url
+server:
+  port: 8082
+  servlet:
+    context-path: /api/v1/shop

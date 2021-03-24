@@ -1,6 +1,5 @@
 package com.training.shop.dto.reqest;
 
-import com.training.shop.model.Product;
 import lombok.Data;
 
 @Data
@@ -9,10 +8,10 @@ public class CartLineRequest {
     /**
      * Link to an item identifier
      */
-    private Product product;
+    private final Long productId;
 
     /**
      * Amount of items
      */
-    private Integer amount;
+    private final Integer amount;
 }

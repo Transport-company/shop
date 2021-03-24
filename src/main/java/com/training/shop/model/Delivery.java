@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -57,18 +57,20 @@ public class Delivery {
      * Unique delivery number
      */
     @Column(name = "tracking_number")
+    @Size(max = 30)
     private String trackingNumber;
 
     /**
      * Information about payment for cargo transit
      */
-    @Column(name = "is_paid")
-    private Boolean isPaid;
+    @Column(name = "paid")
+    private Boolean paid;
 
     /**
      * Information about the delivery stage (cargo status)
      */
     @Column(name = "status")
+    @Size(max = 10)
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status;
 
@@ -82,7 +84,7 @@ public class Delivery {
     /**
      * Information about the sender
      */
-    @ManyToOne(fetch = FetchType.EAGER, optional = false, targetEntity = Client.class)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, targetEntity = Shop.class)
     @JoinColumn(name = "shop_id")
     private Shop shop;
 
